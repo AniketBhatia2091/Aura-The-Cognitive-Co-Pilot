@@ -37,19 +37,24 @@ struct InputScreen: View {
                 
                 textEditorSection(theme: theme, isCalm: isCalm)
                 
-                structureButton(theme: theme)
+                // CTA fades in only after user starts typing
+                if !inputLogic.rawText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                    structureButton(theme: theme)
+                        .transition(.opacity.combined(with: .move(edge: .bottom)))
+                }
                 
                 Spacer()
                 
                 quickAccessRow(theme: theme)
                 
                 Text("Aura doesn't manage tasks. It helps manage your mind.")
-                    .font(.caption2)
-                    .foregroundColor(theme.secondaryText.opacity(0.4))
+                    .font(.system(size: 11, weight: .regular, design: .rounded))
+                    .foregroundColor(theme.secondaryText.opacity(0.35))
                     .padding(.bottom, 16)
             }
-            .padding(.horizontal, 20)
+            .padding(.horizontal, 24)
             .padding(.top, 16)
+            .animation(.spring(response: 0.5, dampingFraction: 0.8), value: inputLogic.rawText.isEmpty)
             .onTapGesture {
                 UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
             }
@@ -83,9 +88,9 @@ struct InputScreen: View {
     
     @ViewBuilder
     private func headerSection(theme: AuraTheme, isCalm: Bool) -> some View {
-        VStack(spacing: 12) {
+        VStack(spacing: 14) {
             Image(systemName: "brain.head.profile")
-                .font(.system(size: isCalm ? 56 : 48))
+                .font(.system(size: isCalm ? 52 : 44))
                 .foregroundStyle(
                     LinearGradient(
                         colors: theme.ringGradient,
@@ -97,18 +102,24 @@ struct InputScreen: View {
                 .accessibilityHidden(true)
             
             Text("Aura")
-                .font(.system(isCalm ? .largeTitle : .title, design: .rounded, weight: .bold))
-                .foregroundColor(theme.primaryText)
+                .font(.system(size: 34, weight: .bold, design: .rounded))
+                .foregroundStyle(
+                    LinearGradient(
+                        colors: [theme.primaryText, theme.accent.opacity(0.8)],
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
                 .accessibilityAddTraits(.isHeader)
             
             if showTagline {
                 Text("What's on your mind?")
-                    .font(.subheadline)
+                    .font(.system(size: 15, weight: .regular, design: .rounded))
                     .foregroundColor(theme.secondaryText)
                     .transition(.opacity)
             }
         }
-        .padding(.top, 24)
+        .padding(.top, 20)
         .accessibilityElement(children: .combine)
     }
     
@@ -117,18 +128,23 @@ struct InputScreen: View {
         HStack(spacing: 6) {
             Circle()
                 .fill(badgeColor)
-                .frame(width: 8, height: 8)
+                .frame(width: 7, height: 7)
             
-            Text("\(uiState.session.score) • \(uiState.loadLabel)")
-                .font(.caption)
-                .fontWeight(.semibold)
+            Text(uiState.loadLabel)
+                .font(.system(size: 12, weight: .medium, design: .rounded))
                 .foregroundColor(theme.secondaryText)
         }
         .padding(.horizontal, 14)
         .padding(.vertical, 6)
-        .background(Capsule().fill(theme.cardBackground))
+        .background(
+            Capsule()
+                .fill(.ultraThinMaterial.opacity(0.5))
+                .overlay(
+                    Capsule().stroke(Color.white.opacity(0.06), lineWidth: 1)
+                )
+        )
         .accessibilityElement(children: .ignore)
-        .accessibilityLabel("Cognitive Load Score: \(uiState.session.score), Status: \(uiState.loadLabel)")
+        .accessibilityLabel("Cognitive Load: \(uiState.loadLabel)")
     }
     
     @ViewBuilder
@@ -145,22 +161,23 @@ struct InputScreen: View {
             
             ZStack(alignment: .topLeading) {
                 if inputLogic.rawText.isEmpty {
-                    Text("Pour your thoughts here… separate ideas with periods, commas, or just keep typing.")
-                        .font(.body)
-                        .foregroundColor(theme.secondaryText.opacity(0.5))
-                        .padding(.top, 10)
-                        .padding(.leading, 6)
+                    Text("Pour your thoughts here…\nJust keep typing, Aura will sort it out.")
+                        .font(.system(size: 17, weight: .regular, design: .rounded))
+                        .foregroundColor(theme.secondaryText.opacity(0.4))
+                        .lineSpacing(4)
+                        .padding(.top, 12)
+                        .padding(.leading, 8)
                 }
                 
                 @Bindable var inputBindable = inputLogic
                 TextEditor(text: $inputBindable.rawText)
-                    .font(.system(isCalm ? .title3 : .body, design: .rounded, weight: isCalm ? .medium : .regular))
+                    .font(.system(size: isCalm ? 19 : 17, weight: isCalm ? .medium : .regular, design: .rounded))
                     .foregroundColor(theme.primaryText)
                     .scrollContentBackground(.hidden)
-                    .frame(minHeight: isCalm ? 250 : 200)
-                    .padding(4)
+                    .frame(minHeight: isCalm ? 260 : 220)
+                    .padding(6)
                     .accessibilityLabel("Brain Dump Input")
-                    .accessibilityHint("Type your thoughts and tasks here. Aura will analyze them.")
+                    .accessibilityHint("Type your thoughts freely. Aura will organize them into tasks.")
                     .onChange(of: inputLogic.rawText) { _, newValue in
                         uiState.onTextChanged(
                             newValue,
@@ -168,13 +185,13 @@ struct InputScreen: View {
                         )
                     }
             }
-            .padding(12)
+            .padding(14)
             .background(
                 RoundedRectangle(cornerRadius: 20)
-                    .fill(theme.cardBackground)
+                    .fill(.ultraThinMaterial.opacity(0.3))
                     .overlay(
                         RoundedRectangle(cornerRadius: 20)
-                            .stroke(theme.accent.opacity(isCalm ? 0.1 : 0.2), lineWidth: 1)
+                            .stroke(theme.accent.opacity(isCalm ? 0.08 : 0.15), lineWidth: 1)
                     )
             )
         }

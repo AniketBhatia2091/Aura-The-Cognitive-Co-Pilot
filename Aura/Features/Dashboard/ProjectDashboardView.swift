@@ -42,19 +42,15 @@ struct ProjectDashboardView: View {
         let theme = uiState.theme
         
         ZStack {
-            LinearGradient(
-                colors: theme.backgroundGradient,
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-            .ignoresSafeArea()
+            AmbientBackground(accentColor: theme.accent, theme: theme)
+                .ignoresSafeArea()
             
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 0) {
                     // ── Hero header
                     heroHeader(theme: theme)
                     
-                    VStack(spacing: 16) {
+                    VStack(spacing: 18) {
                         // ── Portfolio strip
                         if !projects.isEmpty {
                             portfolioStrip(theme: theme)
@@ -65,13 +61,13 @@ struct ProjectDashboardView: View {
                         if !projects.isEmpty {
                             HStack {
                                 Text("PROJECTS")
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                                    .foregroundColor(theme.secondaryText.opacity(0.5))
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    .foregroundColor(theme.secondaryText.opacity(0.45))
                                     .tracking(1.5)
                                 Spacer()
                                 Text("\(projects.count)")
-                                    .font(.system(size: 11, weight: .bold, design: .rounded))
-                                    .foregroundColor(theme.secondaryText.opacity(0.4))
+                                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                                    .foregroundColor(theme.secondaryText.opacity(0.35))
                             }
                         }
                         
@@ -80,12 +76,13 @@ struct ProjectDashboardView: View {
                             emptyState(theme: theme)
                         } else {
                             LazyVGrid(columns: [
-                                GridItem(.flexible(), spacing: 12),
-                                GridItem(.flexible(), spacing: 12)
-                            ], spacing: 12) {
+                                GridItem(.flexible(), spacing: 14),
+                                GridItem(.flexible(), spacing: 14)
+                            ], spacing: 14) {
                                 ForEach(Array(projects.enumerated()), id: \.element.id) { idx, project in
                                     DashboardProjectCard(project: project, theme: theme, index: idx)
                                         .onTapGesture {
+                                            HapticManager.shared.playLightImpact()
                                             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                                                 selectedProject = project
                                             }
@@ -96,7 +93,7 @@ struct ProjectDashboardView: View {
                         
                         Spacer(minLength: 50)
                     }
-                    .padding(.horizontal, 20)
+                    .padding(.horizontal, 24)
                     .padding(.top, 20)
                 }
             }
@@ -145,10 +142,10 @@ struct ProjectDashboardView: View {
                                 .foregroundColor(theme.secondaryText)
                         }
                         Text("Aura")
-                            .font(.system(size: 36, weight: .bold, design: .rounded))
+                            .font(.system(size: 34, weight: .bold, design: .rounded))
                             .foregroundStyle(
                                 LinearGradient(
-                                    colors: [.white, theme.accent.opacity(0.8)],
+                                    colors: [theme.primaryText, theme.accent.opacity(0.7)],
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 )
@@ -158,6 +155,7 @@ struct ProjectDashboardView: View {
                     Spacer()
                     
                     Button {
+                        HapticManager.shared.playMediumImpact()
                         showNewProject = true
                     } label: {
                         HStack(spacing: 6) {
@@ -169,14 +167,16 @@ struct ProjectDashboardView: View {
                         .foregroundColor(.white)
                         .padding(.horizontal, 16)
                         .padding(.vertical, 10)
-                        .background(
+                        .background(.ultraThinMaterial)
+                        .clipShape(Capsule())
+                        .overlay(
                             Capsule()
-                                .fill(theme.accent)
-                                .shadow(color: theme.accent.opacity(0.4), radius: 8, y: 4)
+                                .stroke(theme.accent.opacity(0.4), lineWidth: 1)
                         )
+                        .shadow(color: theme.accent.opacity(0.2), radius: 8, y: 4)
                     }
                 }
-                .padding(.horizontal, 20)
+                .padding(.horizontal, 24)
                 .padding(.top, 20)
                 
                 // Overall progress bar (if has projects)
@@ -340,7 +340,16 @@ struct ProjectDashboardView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .padding(.vertical, 20)
+        .padding(.vertical, 30)
+        .padding(.horizontal, 20)
+        .background(.ultraThinMaterial)
+        .clipShape(RoundedRectangle(cornerRadius: 24, style: .continuous))
+        .overlay(
+            RoundedRectangle(cornerRadius: 24, style: .continuous)
+                .stroke(Color.white.opacity(0.1), lineWidth: 1)
+        )
+        .padding(.horizontal, 20)
+        .padding(.top, 40)
     }
 }
 
@@ -444,7 +453,7 @@ struct DashboardProjectCard: View {
             .padding(.bottom, 14)
         }
         .background(
-            RoundedRectangle(cornerRadius: 18)
+            RoundedRectangle(cornerRadius: 20)
                 .fill(
                     LinearGradient(
                         colors: [
@@ -456,7 +465,7 @@ struct DashboardProjectCard: View {
                     )
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: 18)
+                    RoundedRectangle(cornerRadius: 20)
                         .stroke(project.accentColor.opacity(0.18), lineWidth: 1)
                 )
         )
@@ -475,6 +484,7 @@ struct NewProjectSheet: View {
     let onCreate: (String, String, String) -> Void
     
     @Environment(\.dismiss) private var dismiss
+    @FocusState private var isNameFocused: Bool
     @State private var name = ""
     @State private var selectedEmoji = "🧠"
     @State private var selectedColorHex = "8C7AFF"
@@ -498,156 +508,303 @@ struct NewProjectSheet: View {
     var body: some View {
         NavigationStack {
             ZStack {
+                // Clean dark gradient background
                 LinearGradient(
-                    colors: theme.backgroundGradient,
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
+                    colors: [
+                        Color(red: 0.06, green: 0.06, blue: 0.11),
+                        Color(red: 0.09, green: 0.09, blue: 0.15)
+                    ],
+                    startPoint: .top,
+                    endPoint: .bottom
                 )
                 .ignoresSafeArea()
                 
+                // Subtle accent glow at the top
+                Circle()
+                    .fill(selectedColor.opacity(0.08))
+                    .frame(width: 300, height: 300)
+                    .blur(radius: 80)
+                    .offset(y: -200)
+                    .ignoresSafeArea()
+                
                 ScrollView(showsIndicators: false) {
-                    VStack(spacing: 28) {
+                    VStack(spacing: 24) {
                         
-                        // Preview card
-                        HStack(spacing: 14) {
-                            ZStack {
-                                Circle()
-                                    .fill(selectedColor.opacity(0.18))
-                                    .frame(width: 56, height: 56)
-                                Text(selectedEmoji)
-                                    .font(.system(size: 28))
-                            }
-                            VStack(alignment: .leading, spacing: 3) {
-                                Text(name.isEmpty ? "Project Name" : name)
-                                    .font(.system(size: 17, weight: .bold, design: .rounded))
-                                    .foregroundColor(name.isEmpty ? theme.secondaryText.opacity(0.4) : .white)
-                                Text("New project")
-                                    .font(.caption)
-                                    .foregroundColor(selectedColor)
-                            }
-                            Spacer()
-                        }
-                        .padding(16)
-                        .background(
-                            RoundedRectangle(cornerRadius: 16)
-                                .fill(selectedColor.opacity(0.10))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 16)
-                                        .stroke(selectedColor.opacity(0.2), lineWidth: 1)
-                                )
-                        )
+                        // ── Live Preview Card
+                        previewCard
                         
-                        // Name
-                        field(label: "PROJECT NAME") {
-                            TextField("e.g. App Redesign", text: $name)
-                                .font(.body)
-                                .foregroundColor(.white)
-                                .padding(14)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .fill(theme.cardBackground)
-                                )
+                        // ── Form Sections
+                        VStack(spacing: 20) {
+                            nameSection
+                            iconSection
+                            colorSection
                         }
                         
-                        // Emoji
-                        field(label: "ICON") {
-                            LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 5), spacing: 10) {
-                                ForEach(emojis, id: \.self) { emoji in
-                                    Button {
-                                        selectedEmoji = emoji
-                                    } label: {
-                                        Text(emoji)
-                                            .font(.title2)
-                                            .frame(maxWidth: .infinity)
-                                            .padding(.vertical, 8)
-                                            .background(
-                                                RoundedRectangle(cornerRadius: 10)
-                                                    .fill(selectedEmoji == emoji
-                                                        ? selectedColor.opacity(0.22)
-                                                        : theme.cardBackground
-                                                    )
-                                                    .overlay(
-                                                        RoundedRectangle(cornerRadius: 10)
-                                                            .stroke(selectedEmoji == emoji
-                                                                ? selectedColor
-                                                                : Color.clear, lineWidth: 1.5)
-                                                    )
-                                            )
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                        }
+                        // ── Create Button
+                        createButton
                         
-                        // Color
-                        field(label: "COLOR") {
-                            HStack(spacing: 12) {
-                                ForEach(colors, id: \.hex) { item in
-                                    Button {
-                                        selectedColorHex = item.hex
-                                    } label: {
-                                        ZStack {
-                                            Circle()
-                                                .fill(Color(hex: item.hex) ?? .gray)
-                                                .frame(width: 34, height: 34)
-                                            if selectedColorHex == item.hex {
-                                                Circle()
-                                                    .stroke(Color.white, lineWidth: 2.5)
-                                                    .frame(width: 34, height: 34)
-                                                Image(systemName: "checkmark")
-                                                    .font(.system(size: 11, weight: .bold))
-                                                    .foregroundColor(.white)
-                                            }
-                                        }
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                        }
-                        
-                        // Create button
-                        Button {
-                            guard isValid else { return }
-                            onCreate(name.trimmingCharacters(in: .whitespaces), selectedEmoji, selectedColorHex)
-                            dismiss()
-                        } label: {
-                            Text("Create Project")
-                                .font(.system(size: 16, weight: .bold, design: .rounded))
-                                .foregroundColor(.white)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 16)
-                                .background(
-                                    RoundedRectangle(cornerRadius: 14)
-                                        .fill(isValid ? selectedColor : theme.secondaryText.opacity(0.2))
-                                        .shadow(color: isValid ? selectedColor.opacity(0.35) : .clear, radius: 10, y: 5)
-                                )
-                        }
-                        .disabled(!isValid)
-                        
-                        Spacer(minLength: 20)
+                        Spacer(minLength: 30)
                     }
-                    .padding(.horizontal, 20)
-                    .padding(.top, 8)
+                    .padding(.horizontal, 24)
+                    .padding(.top, 16)
                 }
             }
-            .navigationTitle("New Project")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") { dismiss() }
-                        .foregroundColor(theme.secondaryText)
+                    Button {
+                        dismiss()
+                    } label: {
+                        Text("Cancel")
+                            .font(.system(size: 15, weight: .medium, design: .rounded))
+                            .foregroundColor(theme.secondaryText)
+                    }
+                }
+                ToolbarItem(placement: .principal) {
+                    Text("New Project")
+                        .font(.system(size: 17, weight: .semibold, design: .rounded))
+                        .foregroundColor(.white)
                 }
             }
         }
     }
     
+    // MARK: - Preview Card
+    
+    private var previewCard: some View {
+        VStack(spacing: 16) {
+            // Emoji avatar
+            ZStack {
+                Circle()
+                    .fill(
+                        RadialGradient(
+                            colors: [selectedColor.opacity(0.25), selectedColor.opacity(0.05)],
+                            center: .center,
+                            startRadius: 5,
+                            endRadius: 45
+                        )
+                    )
+                    .frame(width: 80, height: 80)
+                
+                Circle()
+                    .stroke(selectedColor.opacity(0.3), lineWidth: 1.5)
+                    .frame(width: 80, height: 80)
+                
+                Text(selectedEmoji)
+                    .font(.system(size: 38))
+            }
+            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: selectedEmoji)
+            
+            VStack(spacing: 4) {
+                Text(name.isEmpty ? "Project Name" : name)
+                    .font(.system(size: 20, weight: .bold, design: .rounded))
+                    .foregroundColor(name.isEmpty ? .white.opacity(0.2) : .white)
+                    .lineLimit(1)
+                    .animation(.easeOut(duration: 0.2), value: name)
+                
+                Text("New project")
+                    .font(.system(size: 13, weight: .medium, design: .rounded))
+                    .foregroundColor(selectedColor.opacity(0.7))
+            }
+        }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, 28)
+        .background(
+            RoundedRectangle(cornerRadius: 24)
+                .fill(.ultraThinMaterial.opacity(0.3))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 24)
+                        .stroke(
+                            LinearGradient(
+                                colors: [selectedColor.opacity(0.2), selectedColor.opacity(0.05)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            ),
+                            lineWidth: 1
+                        )
+                )
+        )
+        .animation(.easeInOut(duration: 0.3), value: selectedColorHex)
+    }
+    
+    // MARK: - Name Section
+    
+    private var nameSection: some View {
+        formSection(label: "PROJECT NAME") {
+            HStack(spacing: 12) {
+                Image(systemName: "character.cursor.ibeam")
+                    .font(.system(size: 14))
+                    .foregroundColor(isNameFocused ? selectedColor : theme.secondaryText.opacity(0.4))
+                
+                TextField("", text: $name, prompt: Text("e.g. App Redesign")
+                    .foregroundColor(theme.secondaryText.opacity(0.3)))
+                    .font(.system(size: 16, weight: .medium, design: .rounded))
+                    .foregroundColor(.white)
+                    .focused($isNameFocused)
+                    .submitLabel(.done)
+                
+                if !name.isEmpty {
+                    Button {
+                        name = ""
+                    } label: {
+                        Image(systemName: "xmark.circle.fill")
+                            .font(.system(size: 14))
+                            .foregroundColor(theme.secondaryText.opacity(0.3))
+                    }
+                }
+            }
+            .padding(16)
+            .background(
+                RoundedRectangle(cornerRadius: 16)
+                    .fill(Color.white.opacity(0.04))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 16)
+                            .stroke(
+                                isNameFocused ? selectedColor.opacity(0.4) : Color.white.opacity(0.06),
+                                lineWidth: 1
+                            )
+                    )
+            )
+            .animation(.easeOut(duration: 0.2), value: isNameFocused)
+        }
+    }
+    
+    // MARK: - Icon Section
+    
+    private var iconSection: some View {
+        formSection(label: "ICON") {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 10), count: 5), spacing: 10) {
+                ForEach(emojis, id: \.self) { emoji in
+                    Button {
+                        HapticManager.shared.playLightImpact()
+                        withAnimation(.spring(response: 0.3, dampingFraction: 0.7)) {
+                            selectedEmoji = emoji
+                        }
+                    } label: {
+                        Text(emoji)
+                            .font(.system(size: 26))
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 10)
+                            .background(
+                                RoundedRectangle(cornerRadius: 14)
+                                    .fill(
+                                        selectedEmoji == emoji
+                                            ? selectedColor.opacity(0.15)
+                                            : Color.white.opacity(0.03)
+                                    )
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 14)
+                                            .stroke(
+                                                selectedEmoji == emoji
+                                                    ? selectedColor.opacity(0.5)
+                                                    : Color.white.opacity(0.04),
+                                                lineWidth: selectedEmoji == emoji ? 1.5 : 1
+                                            )
+                                    )
+                            )
+                            .scaleEffect(selectedEmoji == emoji ? 1.05 : 1.0)
+                    }
+                    .buttonStyle(.plain)
+                    .animation(.spring(response: 0.3, dampingFraction: 0.7), value: selectedEmoji)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Color Section
+    
+    private var colorSection: some View {
+        formSection(label: "ACCENT COLOR") {
+            LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 14), count: 8), spacing: 14) {
+                ForEach(colors, id: \.hex) { item in
+                    let itemColor = Color(hex: item.hex) ?? .gray
+                    let isSelected = selectedColorHex == item.hex
+                    
+                    Button {
+                        HapticManager.shared.playLightImpact()
+                        withAnimation(.easeInOut(duration: 0.25)) {
+                            selectedColorHex = item.hex
+                        }
+                    } label: {
+                        ZStack {
+                            // Outer ring (selected)
+                            Circle()
+                                .stroke(isSelected ? Color.white.opacity(0.8) : Color.clear, lineWidth: 2)
+                                .frame(width: 36, height: 36)
+                            
+                            // Color fill
+                            Circle()
+                                .fill(itemColor)
+                                .frame(width: isSelected ? 26 : 30, height: isSelected ? 26 : 30)
+                            
+                            // Checkmark
+                            if isSelected {
+                                Image(systemName: "checkmark")
+                                    .font(.system(size: 10, weight: .black))
+                                    .foregroundColor(.white)
+                                    .transition(.scale.combined(with: .opacity))
+                            }
+                        }
+                        .frame(width: 36, height: 36)
+                    }
+                    .buttonStyle(.plain)
+                }
+            }
+        }
+    }
+    
+    // MARK: - Create Button
+    
+    private var createButton: some View {
+        Button {
+            guard isValid else { return }
+            HapticManager.shared.playSuccess()
+            onCreate(name.trimmingCharacters(in: .whitespaces), selectedEmoji, selectedColorHex)
+            dismiss()
+        } label: {
+            HStack(spacing: 8) {
+                Image(systemName: "plus.circle.fill")
+                    .font(.system(size: 16, weight: .semibold))
+                Text("Create Project")
+                    .font(.system(size: 17, weight: .bold, design: .rounded))
+            }
+            .foregroundColor(.white)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 18)
+            .background(
+                RoundedRectangle(cornerRadius: 18)
+                    .fill(
+                        isValid
+                            ? LinearGradient(
+                                colors: [selectedColor, selectedColor.opacity(0.7)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                              )
+                            : LinearGradient(
+                                colors: [Color.white.opacity(0.08), Color.white.opacity(0.04)],
+                                startPoint: .leading,
+                                endPoint: .trailing
+                              )
+                    )
+                    .shadow(color: isValid ? selectedColor.opacity(0.4) : .clear, radius: 16, y: 8)
+            )
+        }
+        .disabled(!isValid)
+        .opacity(isValid ? 1.0 : 0.5)
+        .animation(.easeOut(duration: 0.2), value: isValid)
+        .padding(.top, 8)
+    }
+    
+    // MARK: - Form Section Helper
+    
     @ViewBuilder
-    private func field<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
-        VStack(alignment: .leading, spacing: 10) {
+    private func formSection<Content: View>(label: String, @ViewBuilder content: () -> Content) -> some View {
+        VStack(alignment: .leading, spacing: 12) {
             Text(label)
-                .font(.system(size: 10, weight: .bold))
-                .foregroundColor(theme.secondaryText.opacity(0.5))
+                .font(.system(size: 11, weight: .bold, design: .rounded))
+                .foregroundColor(theme.secondaryText.opacity(0.45))
                 .tracking(1.5)
+                .padding(.leading, 4)
             content()
         }
     }

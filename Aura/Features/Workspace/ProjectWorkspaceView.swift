@@ -25,67 +25,52 @@ struct ProjectWorkspaceView: View {
         let theme = uiState.theme
         
         VStack(spacing: 0) {
-            // ── Modern top bar
-            HStack(spacing: 10) {
+            // ── Redesigned top bar — clean, minimal
+            HStack(spacing: 12) {
+                // Back button — simplified
                 Button {
+                    HapticManager.shared.playLightImpact()
                     dismiss()
                 } label: {
                     HStack(spacing: 6) {
                         Image(systemName: "chevron.left")
-                            .font(.system(size: 11, weight: .bold))
+                            .font(.system(size: 13, weight: .semibold))
                         Text(project.emoji)
-                            .font(.system(size: 13))
+                            .font(.system(size: 14))
                         Text(project.name)
-                            .font(.system(size: 13, weight: .semibold, design: .rounded))
+                            .font(.system(size: 14, weight: .semibold, design: .rounded))
                             .lineLimit(1)
                     }
-                    .foregroundStyle(
-                        LinearGradient(
-                            colors: [.white.opacity(0.9), project.accentColor],
-                            startPoint: .leading,
-                            endPoint: .trailing
-                        )
-                    )
-                    .padding(.horizontal, 13)
-                    .padding(.vertical, 8)
+                    .foregroundColor(theme.primaryText)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 9)
                     .background(
                         Capsule()
-                            .fill(project.accentColor.opacity(0.12))
+                            .fill(.ultraThinMaterial)
                             .overlay(
                                 Capsule()
-                                    .stroke(project.accentColor.opacity(0.22), lineWidth: 1)
+                                    .stroke(Color.white.opacity(0.08), lineWidth: 1)
                             )
                     )
                 }
                 
                 Spacer()
                 
-                // Current screen indicator dots
-                HStack(spacing: 5) {
-                    Circle()
-                        .fill(currentScreen == .input ? .white : .white.opacity(0.2))
-                        .frame(width: 5, height: 5)
-                    Circle()
-                        .fill(currentScreen == .plan ? .white : .white.opacity(0.2))
-                        .frame(width: 5, height: 5)
+                // Screen indicator — clear text labels instead of confusing dots
+                HStack(spacing: 2) {
+                    screenTab("Input", screen: .input, theme: theme)
+                    screenTab("Plan", screen: .plan, theme: theme)
                 }
-                .animation(.easeInOut(duration: 0.25), value: currentScreen)
+                .padding(3)
+                .background(
+                    Capsule()
+                        .fill(Color.white.opacity(0.04))
+                )
             }
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 12)
             .background(
-                ZStack(alignment: .bottom) {
-                    (theme.backgroundGradient.first ?? .clear).opacity(0.98)
-                    Rectangle()
-                        .fill(
-                            LinearGradient(
-                                colors: [project.accentColor.opacity(0.4), .clear],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
-                        )
-                        .frame(height: 1)
-                }
+                theme.backgroundGradient.first?.opacity(0.95) ?? Color.clear
             )
             
             // ── Screen content
@@ -94,7 +79,7 @@ struct ProjectWorkspaceView: View {
                 case .input:
                     InputScreen(
                         onStructured: {
-                            withAnimation(.easeInOut(duration: 0.5)) {
+                            withAnimation(.easeInOut(duration: 0.45)) {
                                 currentScreen = .plan
                             }
                         },
@@ -108,7 +93,7 @@ struct ProjectWorkspaceView: View {
                 case .plan:
                     PlanScreen(
                         onNewDump: {
-                            withAnimation(.easeInOut(duration: 0.5)) {
+                            withAnimation(.easeInOut(duration: 0.45)) {
                                 currentScreen = .input
                             }
                         },
@@ -128,5 +113,28 @@ struct ProjectWorkspaceView: View {
                 currentScreen = .plan
             }
         }
+    }
+    
+    @ViewBuilder
+    private func screenTab(_ label: String, screen: WorkspaceScreen, theme: AuraTheme) -> some View {
+        Button {
+            HapticManager.shared.playLightImpact()
+            withAnimation(.easeInOut(duration: 0.25)) {
+                currentScreen = screen
+            }
+        } label: {
+            Text(label)
+                .font(.system(size: 11, weight: .semibold, design: .rounded))
+                .foregroundColor(currentScreen == screen ? .white : theme.secondaryText)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 5)
+                .background(
+                    currentScreen == screen
+                        ? Capsule().fill(theme.accent.opacity(0.35))
+                        : Capsule().fill(Color.clear)
+                )
+        }
+        .buttonStyle(.plain)
+        .animation(.easeInOut(duration: 0.25), value: currentScreen)
     }
 }

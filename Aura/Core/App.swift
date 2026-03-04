@@ -14,6 +14,7 @@ struct AuraApp: App {
             ContentView()
                 .environment(inputLogic)
                 .environment(uiState)
+                .background(Color.clear)
         }
         .modelContainer(for: [
             AuraProject.self,

@@ -33,11 +33,10 @@ struct FocusRingView: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("Focus Ring")
-                .font(.subheadline)
-                .fontWeight(.semibold)
+                .font(.system(size: 10, weight: .bold, design: .rounded))
                 .textCase(.uppercase)
                 .tracking(2)
-                .foregroundColor(theme.secondaryText)
+                .foregroundColor(theme.secondaryText.opacity(0.6))
                 .accessibilityHidden(true)
             
             ZStack {
@@ -45,9 +44,9 @@ struct FocusRingView: View {
                 Circle()
                     .stroke(
                         theme.cardBackground,
-                        style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                        style: StrokeStyle(lineWidth: 16, lineCap: .round)
                     )
-                    .frame(width: 180, height: 180)
+                    .frame(width: 220, height: 220)
                     .accessibilityHidden(true)
                 
                 // Animated progress arc (or timer fill)
@@ -60,9 +59,9 @@ struct FocusRingView: View {
                             startAngle: .degrees(-90),
                             endAngle: .degrees(270)
                         ),
-                        style: StrokeStyle(lineWidth: 12, lineCap: .round)
+                        style: StrokeStyle(lineWidth: 16, lineCap: .round)
                     )
-                    .frame(width: 180, height: 180)
+                    .frame(width: 220, height: 220)
                     .rotationEffect(.degrees(-90))
                     .animation(timerActive ? .linear(duration: 1.0) : .spring(response: 1.0, dampingFraction: 0.7), value: timerActive ? timerProgress : progress)
                     .accessibilityHidden(true)
@@ -72,15 +71,15 @@ struct FocusRingView: View {
                     .fill(
                         RadialGradient(
                             colors: [
-                                theme.accent.opacity(0.15),
+                                theme.accent.opacity(0.12),
                                 Color.clear
                             ],
                             center: .center,
                             startRadius: 20,
-                            endRadius: 80
+                            endRadius: 90
                         )
                     )
-                    .frame(width: 150, height: 150)
+                    .frame(width: 180, height: 180)
                     .scaleEffect(pulseScale)
                     .accessibilityHidden(true)
                 
@@ -105,17 +104,23 @@ struct FocusRingView: View {
                         
                         if timerActive {
                             Text(formatTime(timeRemaining))
-                                .font(.system(size: 14, weight: .bold, design: .rounded))
+                                .font(.system(size: 22, weight: .bold, design: .monospaced))
                                 .foregroundColor(theme.accent)
                                 .transition(.opacity)
                             
                             Button(action: stopTimerEarly) {
                                 Text("Stop")
-                                    .font(.caption2.bold())
+                                    .font(.system(size: 11, weight: .semibold, design: .rounded))
                                     .foregroundColor(theme.secondaryText)
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 3)
-                                    .background(Capsule().stroke(theme.secondaryText.opacity(0.3)))
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 5)
+                                    .background(
+                                        Capsule()
+                                            .fill(.ultraThinMaterial.opacity(0.3))
+                                            .overlay(
+                                                Capsule().stroke(theme.secondaryText.opacity(0.2), lineWidth: 1)
+                                            )
+                                    )
                             }
                             .accessibilityLabel("Stop Timer")
                         } else {
@@ -153,7 +158,7 @@ struct FocusRingView: View {
                             .foregroundColor(theme.primaryText)
                     }
                 }
-                .frame(width: 130, height: 130)
+                .frame(width: 170, height: 170)
                 .clipShape(Circle())
             }
             

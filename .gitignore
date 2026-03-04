@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode user data
+xcuserdata/
+*.xcuserdatad
+
+# Xcode build
+build/
+DerivedData/
+*.xcodeproj/project.xcworkspace/xcuserdata/
+
+# SPM
+.build/
+.swiftpm/
+
+# CocoaPods (if used)
+Pods/
+
+# Misc
+*.moved-aside
+*.hmap
+*.ipa
+*.dSYM.zip
+*.dSYM

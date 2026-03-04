@@ -14,10 +14,12 @@
 		3E62D90B0F3AE5FC611FE07D /* UIState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1402FAA392712BA894E53798 /* UIState.swift */; };
 		3ED3BEF346A5607ED05CBCFD /* SessionState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12039905FD7DD45515CF9899 /* SessionState.swift */; };
 		4D0209467320A21B21B95AFE /* TaskRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A2BA4D8708638FC19B71B47 /* TaskRow.swift */; };
+		4F684563E028A2221BDB5931 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7DD1D6049999299E04C62EA0 /* HapticManager.swift */; };
 		538058E8594A7407534FA007 /* ProjectWorkspaceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 15C903D1D76AD75295278E57 /* ProjectWorkspaceView.swift */; };
 		5A120ACEB05E0B518F3670B6 /* FocusRingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0001795FD54E67BBC07602 /* FocusRingView.swift */; };
 		5CE90F5EAFC4120C1A6A0D1D /* OnboardingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DCD387055E0A3A288E6370E /* OnboardingView.swift */; };
 		65560DF23BF378D60F8CC7FF /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = D8295900089EFD4B3E7B2EE8 /* Task.swift */; };
+		679B45F958170D338DE9FE1C /* AmbientBackground.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36C1AC95FEAF1949AD26BE69 /* AmbientBackground.swift */; };
 		8E0856F55A5EEDC2A470D023 /* AnalyticsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7A1BAE12F35E770629C6B215 /* AnalyticsView.swift */; };
 		A437DCE9202ED352C698BC6C /* AuraProject.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36CF9F7E8F6F025AE1F99124 /* AuraProject.swift */; };
 		B203C31159A607FD0B1B0AD7 /* ReflectionLogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E696F9F53C0266A9A314C75 /* ReflectionLogView.swift */; };
@@ -39,6 +41,7 @@
 		1402FAA392712BA894E53798 /* UIState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIState.swift; sourceTree = "<group>"; };
 		15C903D1D76AD75295278E57 /* ProjectWorkspaceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProjectWorkspaceView.swift; sourceTree = "<group>"; };
 		1867368837AAFABA52DEEDCB /* InputLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputLogic.swift; sourceTree = "<group>"; };
+		36C1AC95FEAF1949AD26BE69 /* AmbientBackground.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AmbientBackground.swift; sourceTree = "<group>"; };
 		36CF9F7E8F6F025AE1F99124 /* AuraProject.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuraProject.swift; sourceTree = "<group>"; };
 		4A9E59AC258B2C2BA91E5EF7 /* Aura.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = Aura.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		4DCD387055E0A3A288E6370E /* OnboardingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OnboardingView.swift; sourceTree = "<group>"; };
@@ -46,6 +49,7 @@
 		6E696F9F53C0266A9A314C75 /* ReflectionLogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReflectionLogView.swift; sourceTree = "<group>"; };
 		75AED844BA65A8BE4C906A3E /* SessionDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionDetailView.swift; sourceTree = "<group>"; };
 		7A1BAE12F35E770629C6B215 /* AnalyticsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnalyticsView.swift; sourceTree = "<group>"; };
+		7DD1D6049999299E04C62EA0 /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		92464B20A1E6CC7E5B863075 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		C469C27635186D897E456972 /* PlanScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlanScreen.swift; sourceTree = "<group>"; };
 		CE0001795FD54E67BBC07602 /* FocusRingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FocusRingView.swift; sourceTree = "<group>"; };
@@ -79,6 +83,7 @@
 			children = (
 				D9309192F3C8CD740F0AB228 /* App.swift */,
 				92464B20A1E6CC7E5B863075 /* ContentView.swift */,
+				7DD1D6049999299E04C62EA0 /* HapticManager.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -113,6 +118,7 @@
 		744F3AC7E0144E8B535A9937 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				36C1AC95FEAF1949AD26BE69 /* AmbientBackground.swift */,
 				078691719D68F14FCE540BC7 /* CalmOverlay.swift */,
 			);
 			path = Shared;
@@ -207,7 +213,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastUpgradeCheck = 1600;
+				LastUpgradeCheck = 1430;
 			};
 			buildConfigurationList = 5BE1483D97C2A0314A01DE80 /* Build configuration list for PBXProject "Aura" */;
 			compatibilityVersion = "Xcode 14.0";
@@ -244,6 +250,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				679B45F958170D338DE9FE1C /* AmbientBackground.swift in Sources */,
 				8E0856F55A5EEDC2A470D023 /* AnalyticsView.swift in Sources */,
 				06D8193FA2D4FB43521AA9B8 /* App.swift in Sources */,
 				A437DCE9202ED352C698BC6C /* AuraProject.swift in Sources */,
@@ -251,6 +258,7 @@
 				D2F77080BBB207C8DDC54054 /* CalmOverlay.swift in Sources */,
 				1AD5B1E6910A7588B626ED2B /* ContentView.swift in Sources */,
 				5A120ACEB05E0B518F3670B6 /* FocusRingView.swift in Sources */,
+				4F684563E028A2221BDB5931 /* HapticManager.swift in Sources */,
 				B5801E1D61025F713D51AAFC /* InputLogic.swift in Sources */,
 				ED0B5A7F2C62F73AAEFDC90F /* InputScreen.swift in Sources */,
 				5CE90F5EAFC4120C1A6A0D1D /* OnboardingView.swift in Sources */,
@@ -273,21 +281,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Aura/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aniketbhatia.aura;
 				SDKROOT = iphoneos;
-				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS = YES;
-				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -296,21 +301,18 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Aura/Info.plist;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.aniketbhatia.aura;
 				SDKROOT = iphoneos;
-				SWIFT_STRICT_CONCURRENCY = minimal;
 				SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS = YES;
-				SWIFT_VERSION = 5.9;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -360,7 +362,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -422,7 +423,6 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;

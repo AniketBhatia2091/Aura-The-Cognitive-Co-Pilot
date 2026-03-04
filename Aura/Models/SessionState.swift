@@ -30,46 +30,46 @@ struct AuraTheme {
         case .normal:
             return AuraTheme(
                 backgroundGradient: [
-                    Color(red: 0.07, green: 0.07, blue: 0.14),
-                    Color(red: 0.11, green: 0.10, blue: 0.22)
+                    Color(red: 0.05, green: 0.055, blue: 0.094),   // #0D0E18
+                    Color(red: 0.086, green: 0.09, blue: 0.14)     // #161724
                 ],
-                cardBackground: Color.white.opacity(0.06),
-                primaryText: .white,
-                secondaryText: .white.opacity(0.55),
-                accent: Color(red: 0.55, green: 0.48, blue: 1.0),
+                cardBackground: Color.white.opacity(0.055),
+                primaryText: Color(red: 0.945, green: 0.945, blue: 0.957),  // #F1F1F4
+                secondaryText: Color(red: 0.42, green: 0.44, blue: 0.58),   // #6B7094
+                accent: Color(red: 0.55, green: 0.48, blue: 1.0),           // #8C7AFF
                 ringGradient: [
                     Color(red: 0.55, green: 0.48, blue: 1.0),
-                    Color(red: 0.35, green: 0.78, blue: 0.98)
+                    Color(red: 0.39, green: 0.40, blue: 0.945)              // #6366F1
                 ]
             )
         case .loaded:
             return AuraTheme(
                 backgroundGradient: [
-                    Color(red: 0.06, green: 0.06, blue: 0.12),
-                    Color(red: 0.09, green: 0.09, blue: 0.18)
+                    Color(red: 0.045, green: 0.05, blue: 0.08),
+                    Color(red: 0.075, green: 0.08, blue: 0.125)
                 ],
                 cardBackground: Color.white.opacity(0.04),
-                primaryText: .white.opacity(0.85),
-                secondaryText: .white.opacity(0.45),
+                primaryText: Color(red: 0.92, green: 0.92, blue: 0.94).opacity(0.9),
+                secondaryText: Color(red: 0.42, green: 0.44, blue: 0.58).opacity(0.8),
                 accent: Color(red: 0.45, green: 0.40, blue: 0.85),
                 ringGradient: [
                     Color(red: 0.45, green: 0.40, blue: 0.85),
-                    Color(red: 0.30, green: 0.65, blue: 0.82)
+                    Color(red: 0.39, green: 0.40, blue: 0.945)
                 ]
             )
         case .overwhelmed:
             return AuraTheme(
                 backgroundGradient: [
-                    Color(red: 0.05, green: 0.05, blue: 0.09),
-                    Color(red: 0.07, green: 0.07, blue: 0.12)
+                    Color(red: 0.04, green: 0.04, blue: 0.065),
+                    Color(red: 0.06, green: 0.06, blue: 0.09)
                 ],
                 cardBackground: Color.white.opacity(0.03),
-                primaryText: .white.opacity(0.70),
-                secondaryText: .white.opacity(0.35),
-                accent: Color(red: 0.35, green: 0.55, blue: 0.65),
+                primaryText: Color(red: 0.92, green: 0.92, blue: 0.94).opacity(0.75),
+                secondaryText: Color(red: 0.42, green: 0.44, blue: 0.58).opacity(0.6),
+                accent: Color(red: 0.39, green: 0.40, blue: 0.945),  // Calm indigo
                 ringGradient: [
-                    Color(red: 0.35, green: 0.55, blue: 0.65),
-                    Color(red: 0.25, green: 0.45, blue: 0.55)
+                    Color(red: 0.39, green: 0.40, blue: 0.945),
+                    Color(red: 0.20, green: 0.83, blue: 0.60)        // Calming teal
                 ]
             )
         }

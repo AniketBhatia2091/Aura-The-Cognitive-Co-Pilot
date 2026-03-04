@@ -1,0 +1,16 @@
+name: Aura
+options:
+  bundleIdPrefix: com.aniketbhatia
+targets:
+  Aura:
+    type: application
+    platform: iOS
+    deploymentTarget: "17.0"
+    sources: [Aura]
+    info:
+      path: Aura/Info.plist
+    settings:
+      PRODUCT_BUNDLE_IDENTIFIER: com.aniketbhatia.aura
+      GENERATE_INFOPLIST_FILE: true
+      INFOPLIST_KEY_UILaunchScreen_Generation: YES
+      SWIFT_UPCOMING_FEATURE_BARE_SLASH_REGEX_LITERALS: YES
